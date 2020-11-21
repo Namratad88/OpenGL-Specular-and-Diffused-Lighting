@@ -69,6 +69,7 @@ void sendDataToOpenGL()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, tri.indexBufferSize(), tri.indices, GL_STATIC_DRAW);
 	numIndices = tri.numIndices;
 	tri.cleanup();
+
 }
 
 
@@ -88,18 +89,23 @@ void MeGlWindow::paintGL()
 
 	GLuint diffuseLightLocation = glGetUniformLocation(programID, "diffuseLightLocation");
 	GLuint ambientLightValue = glGetUniformLocation(programID, "ambientLightValue");
+	GLuint cameraPosition = glGetUniformLocation(programID, "cameraPosition");
 	//GLint velocityValue =
 		//glGetUniformLocation(programID, "velocity");
 	//GLint velocityValue =
 		//glGetUniformLocation(programID, "velocity");
 
-	mat4 rotator = glm::rotate(theta,3.0f,20.0f,0.0f);
-	mat4 cubeModelToWorldMatrix = glm::translate(0.0f, 0.0f, -5.0f);
+	mat4 rotator = glm::rotate(theta,-3.0f,20.0f,0.0f);
+	mat4 cubeModelToWorldMatrix = glm::translate(0.0f, 0.0f, -7.0f);
 	mat4 smooshItMatrix = glm::perspective(60.0f, width() / (float)height(), 0.01f, 30.0f);
 	mat4 shippingNormalStuff = cubeModelToWorldMatrix * rotator;
 	mat4 finalMatrix = smooshItMatrix * cubeModelToWorldMatrix * rotator;
+
 	vec3 diffuseLight(10.0f, -10.0f, -20.0f);
 	vec3 ambientLight(0.2f, 0.f, 0.2f);
+	vec3 cameraPos(-10.0f, 0.0f, 0.0f);
+
+	glUniform3fv(cameraPosition, 1, &cameraPos[0]);
 	glUniform3fv(diffuseLightLocation, 1, &diffuseLight[0]);
 	glUniform3fv(ambientLightValue, 1, &ambientLight[0]);
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &finalMatrix[0][0]);
