@@ -1,23 +1,33 @@
 #version 430
 
 out vec4 daColor;
-
-in vec3 vertexPositionWorld;
 in vec3 normalWorld;
-in vec3 theColor;
-in vec3 ambientLight;
-in vec3 cameraVector;
+in vec3 vertexPositionWorld;
 
-in vec3 diffuseLight;
+uniform vec3 lightPositionWorld;
+uniform vec3 eyePositionWorld;
+uniform vec4 ambientLight;
+//in vec2 TexCoord;
+//uniform sampler2D myTexture;
+
 
 void main()
 {
-	daColor = vec4(theColor, 1.0);
-	vec3 directionVector = vertexPositionWorld - diffuseLight;
-	vec3 lightVectorWorld = normalize(diffuseLight - vertexPositionWorld);
-	vec3 reflectedLightVector = reflect(-1 *lightVectorWorld, normalize(normalWorld));
-	float specularBrightness = dot(cameraVector, reflectedLightVector);
-	specularBrightness = pow(specularBrightness,2);
+	// Diffuse
+	vec3 lightVectorWorld = normalize(lightPositionWorld - vertexPositionWorld);
+	float brightness = dot(lightVectorWorld, normalize(normalWorld));
+	vec4 diffuseLight = vec4(brightness, brightness, brightness, 1.0);
+
+	// Specular
+	vec3 reflectedLightVectorWorld = reflect(-lightVectorWorld, normalWorld);
+	vec3 eyeVectorWorld = normalize(eyePositionWorld - vertexPositionWorld);
+	float s = clamp(dot(reflectedLightVectorWorld, eyeVectorWorld), 0, 1);
+	s = pow(s, 50);
+	vec4 specularLight = s*vec4(0, 0, 1, 1);
+
+	//vec4 texColor = texture( myTexture, TexCoord );
+
+	daColor = (ambientLight + clamp(diffuseLight, 0, 1) + specularLight) ;
 	
-	daColor = vec4(theColor * max(dot( normalize(directionVector), normalize(normalWorld)),0) + ambientLight + max(specularBrightness,0),1.0);
+	//FragColor = yourLightBrightness * texColor;
 }

@@ -15,7 +15,8 @@ class MeGlWindow : public QGLWidget
 
 protected:
 	void initializeGL();
-	//void keyPressEvent(QKeyEvent *event);
+	void keyPressEvent(QKeyEvent *e);
+	void mouseMoveEvent(QMouseEvent* e);
 	void paintGL();
 
 private:

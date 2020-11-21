@@ -146,12 +146,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Mainer.cpp" />
     <ClCompile Include="MeGlWindow.cpp" />
     <ClCompile Include="MeGlWindow_moc.cpp" />
     <ClCompile Include="Primitives\ShapeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="FragmentShaderCode.glsl" />
     <ClInclude Include="MeGlWindow.h" />
     <ClInclude Include="Primitives\ShapeData.h" />
@@ -160,6 +162,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="VertexShaderCode.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\brick.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
