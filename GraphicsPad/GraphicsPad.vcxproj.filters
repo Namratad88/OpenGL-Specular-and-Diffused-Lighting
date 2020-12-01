@@ -19,6 +19,8 @@
     <None Include="VertexShaderCode.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\brick.png" />
+    <Image Include="Debug\brick.png" />
+    <Image Include="brick2.png" />
+    <Image Include="red.png" />
   </ItemGroup>
 </Project>

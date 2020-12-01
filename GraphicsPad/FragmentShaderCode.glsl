@@ -7,8 +7,8 @@ in vec3 vertexPositionWorld;
 uniform vec3 lightPositionWorld;
 uniform vec3 eyePositionWorld;
 uniform vec4 ambientLight;
-//in vec2 TexCoord;
-//uniform sampler2D myTexture;
+in vec2 TexCoord;
+uniform sampler2D myTexture;
 
 
 void main()
@@ -25,9 +25,9 @@ void main()
 	s = pow(s, 50);
 	vec4 specularLight = s*vec4(0, 0, 1, 1);
 
-	//vec4 texColor = texture( myTexture, TexCoord );
+	vec4 texColor = texture( myTexture, TexCoord );
 
-	daColor = (ambientLight + clamp(diffuseLight, 0, 1) + specularLight) ;
+	daColor = (ambientLight + clamp(diffuseLight, 0, 1) + specularLight) * texColor ;
 	
 	//FragColor = yourLightBrightness * texColor;
 }

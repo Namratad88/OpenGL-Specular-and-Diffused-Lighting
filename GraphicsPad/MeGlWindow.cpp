@@ -45,6 +45,10 @@ GLuint sphereIndexByteOffset;
 GLuint torusIndexByteOffset;
 Camera camera;
 
+const char* texName = "brick2.png";
+QImage timg = QGLWidget::convertToGLFormat(QImage(texName, "PNG"));
+const char* texName1 = "red.png";
+QImage timg1 = QGLWidget::convertToGLFormat(QImage(texName1, "PNG"));
 
 //float  velocity = rand() % 1000;
 
@@ -183,6 +187,23 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(torusByteOffset + sizeof(float) * 6));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theBufferID);
 
+	glActiveTexture(GL_TEXTURE0);
+	GLuint tid;
+	glGenTextures(1, &tid);
+	glBindTexture(GL_TEXTURE_2D, tid);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, timg.width(), timg.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, timg.bits());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glActiveTexture(GL_TEXTURE0);
+	GLuint tid1;
+	glGenTextures(1, &tid1);
+	glBindTexture(GL_TEXTURE_2D, tid1);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, timg1.width(), timg1.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, timg1.bits());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+
 	cube.cleanup();
 	arrow.cleanup();
 	plane.cleanup();
@@ -197,6 +218,11 @@ void MeGlWindow::paintGL()
 
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width(), height());
+
+	int loc = glGetUniformLocation(programID, "Tex1");
+	if (loc >= 0) glUniform1i(loc, 0);
+	else fprintf(stderr, "\n");
+
 	glm::vec3 lightPositionWorld (-2.0f, 5.0f, 12.0f);
 
 	mat4 modelToProjectionMatrix;
