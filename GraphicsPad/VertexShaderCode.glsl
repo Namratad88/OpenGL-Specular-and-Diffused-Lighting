@@ -20,5 +20,6 @@ void main()
 	gl_Position = modelToProjectionMatrix * vertexPositionModel;
 	normalWorld = vec3(modelToWorldMatrix * vec4(normalModel, 0));
 	vertexPositionWorld = vec3(modelToWorldMatrix * vertexPositionModel);
-	TexCoord = vec2(frac(vertexPositionModel));
+	TexCoord = vertexPositionWorld.xz;
+	//TexCoord = VertexTexCoord;
 }

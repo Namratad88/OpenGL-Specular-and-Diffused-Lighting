@@ -16,14 +16,14 @@ void main()
 	// Diffuse
 	vec3 lightVectorWorld = normalize(lightPositionWorld - vertexPositionWorld);
 	float brightness = dot(lightVectorWorld, normalize(normalWorld));
-	vec4 diffuseLight = vec4(brightness, brightness, brightness, 1.0);
+	vec4 diffuseLight = vec4(brightness, brightness, brightness, 1.0) ;
 
 	// Specular
 	vec3 reflectedLightVectorWorld = reflect(-lightVectorWorld, normalWorld);
 	vec3 eyeVectorWorld = normalize(eyePositionWorld - vertexPositionWorld);
 	float s = clamp(dot(reflectedLightVectorWorld, eyeVectorWorld), 0, 1);
 	s = pow(s, 50);
-	vec4 specularLight = s*vec4(0, 0, 1, 1);
+	vec4 specularLight = s*vec4(2, 2, 2, 1);
 
 	vec4 texColor = texture( myTexture, TexCoord );
 

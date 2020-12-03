@@ -187,6 +187,7 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(torusByteOffset + sizeof(float) * 6));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theBufferID);
 
+
 	glActiveTexture(GL_TEXTURE0);
 	GLuint tid;
 	glGenTextures(1, &tid);
@@ -195,14 +196,16 @@ void sendDataToOpenGL()
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	glActiveTexture(GL_TEXTURE0);
+
+
+	glActiveTexture(GL_TEXTURE1);
 	GLuint tid1;
-	glGenTextures(1, &tid1);
+	glGenTextures(1, &tid1); 
 	glBindTexture(GL_TEXTURE_2D, tid1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, timg1.width(), timg1.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, timg1.bits());
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
+	
 
 	cube.cleanup();
 	arrow.cleanup();
@@ -219,11 +222,10 @@ void MeGlWindow::paintGL()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width(), height());
 
-	int loc = glGetUniformLocation(programID, "Tex1");
-	if (loc >= 0) glUniform1i(loc, 0);
-	else fprintf(stderr, "\n");
+	int loc = glGetUniformLocation(programID, "myTexture");
+	
 
-	glm::vec3 lightPositionWorld (-2.0f, 5.0f, 12.0f);
+	glm::vec3 lightPositionWorld (2.0f, 5.0f, 12.0f);
 
 	mat4 modelToProjectionMatrix;
 	mat4 viewToProjectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 20.0f);
@@ -250,6 +252,8 @@ void MeGlWindow::paintGL()
 	glBindVertexArray(cubeVertexArrayObjectID);
 	mat4 cubeModelToWorldMatrix = glm::translate(3.0f, 0.0f, 3.0f);
 	modelToProjectionMatrix = worldToProjectionMatrix * cubeModelToWorldMatrix;
+	glUniform1i(loc, 0);
+	//else fprintf(stderr, "\n");
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &modelToProjectionMatrix[0][0]);
 	glUniformMatrix4fv(modelToWorldMatrixUniformLocation, 1, GL_FALSE,
 		&cubeModelToWorldMatrix[0][0]);
@@ -257,10 +261,13 @@ void MeGlWindow::paintGL()
 
 	cubeModelToWorldMatrix = glm::translate(-5.0f, 0.0f, -5.0f);
 	modelToProjectionMatrix = worldToProjectionMatrix * cubeModelToWorldMatrix;
+	glUniform1i(loc, 1);
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &modelToProjectionMatrix[0][0]);
 	glUniformMatrix4fv(modelToWorldMatrixUniformLocation, 1, GL_FALSE,
 		&cubeModelToWorldMatrix[0][0]);
 	glDrawElements(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, (void*)cubeIndexByteOffset);
+
+	//plane 
 
 	glBindVertexArray(planeVertexArrayObjectID);
 	mat4 planeModelToWorldMatrix;
@@ -269,6 +276,15 @@ void MeGlWindow::paintGL()
 	glUniformMatrix4fv(modelToWorldMatrixUniformLocation, 1, GL_FALSE,
 		&planeModelToWorldMatrix[0][0]);
 	glDrawElements(GL_TRIANGLES, planeNumIndices, GL_UNSIGNED_SHORT, (void*)planeIndexByteOffset);
+
+	// Sphere
+	glBindVertexArray(sphereVertexArrayObjectID);
+	mat4 sphereModelToWorldMatrix = glm::translate(3.0f, 3.0f, 3.0f);
+	modelToProjectionMatrix = worldToProjectionMatrix * sphereModelToWorldMatrix;
+	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &modelToProjectionMatrix[0][0]);
+	glUniformMatrix4fv(modelToWorldMatrixUniformLocation, 1, GL_FALSE,
+		&sphereModelToWorldMatrix[0][0]);
+	glDrawElements(GL_TRIANGLES, sphereNumIndices, GL_UNSIGNED_SHORT, (void*)sphereIndexByteOffset);
 
 /*	glBindVertexArray(cubeVertexArrayObjectID);
 	cubeModelToWorldMatrix =
